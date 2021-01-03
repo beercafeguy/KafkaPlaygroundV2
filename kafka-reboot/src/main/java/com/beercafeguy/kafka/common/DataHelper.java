@@ -12,4 +12,9 @@ public class DataHelper {
         ProducerRecord<String,String> producerRecord=new ProducerRecord<>(topicName,"value -> "+  Math.random()*10);
         return producerRecord;
     }
+
+    public static ProducerRecord<String,String> getProducerRecord(String topicName,String key){
+        ProducerRecord<String,String> producerRecord=new ProducerRecord<>(topicName,key,"value -> "+  Math.random()*10);
+        return producerRecord;
+    }
 }
