@@ -13,7 +13,7 @@ public class PropertyFactory {
     }
 
     public static Properties getAppProperties() throws IOException {
-        FileReader reader=new FileReader("src/main/resources/application.properties");
+        FileReader reader=new FileReader("TwitterKafkaESDemo/src/main/resources/application.properties");
         Properties properties=new Properties();
         properties.load(reader);
         return properties;

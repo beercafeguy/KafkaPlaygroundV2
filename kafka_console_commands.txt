@@ -1,0 +1,21 @@
+##### Consume from a topic
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group app_grp_1 --topic first_kafka_topic
+
+
+##### Create a topic with 3 partitions 
+kafka-topics.bat --bootstrap-server localhost:9092 --topic second_kafka_topic --replication-factor 1 --partitions 3 --create
+kafka-topics.bat --bootstrap-server localhost:9092 --list
+kafka-topics.bat --bootstrap-server localhost:9092 --topic second_kafka_topic --describe 
+
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group app_grp_1 --topic second_kafka_topic
+
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --group SampleConsumerGroupOne
+
+kafka-topics.bat --bootstrap-server localhost:9092 --topic tp_twitter_covid_19_01 --replication-factor 1 --partitions 3 --create
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic tp_twitter_covid_19_01
+
+
+kafka-topics.bat --bootstrap-server localhost:9092 --list
