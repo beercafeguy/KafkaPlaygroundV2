@@ -18,6 +18,7 @@
         <module>kafka-reboot</module>
         <module>TwitterKafkaESDemo</module>
         <module>elesticsearch-consumer</module>
+        <module>kafka-connect-demo</module>
     </modules>
 
     <dependencies>

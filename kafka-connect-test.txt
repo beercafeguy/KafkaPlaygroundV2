@@ -1,0 +1,4 @@
+export CLASSPATH="$(find connectors/usr/share/kafka-connect/kafka-connect-twitter/ -type f -name '*.jar'|tr '\n' ';')"
+ ~/tools/kafka_2.12-2.7.0/bin/windows/connect-standalone.bat connect-standalone.properties twitter.properties
+The input line is too long.
+The syntax of the command is incorrect.
