@@ -32,11 +32,23 @@ public class PropertyFactory {
         Properties properties=new Properties();
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,"ESConsumerGroupOne");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,"ESConsumerIdempGroupOne");
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,bootstrapServers);
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
         properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"true");
 
+        return properties;
+    }
+
+    public static Properties getManualCommitConsumerProps(){
+        Properties properties=new Properties();
+        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG,"ESConsumerManualGroupOne");
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,bootstrapServers);
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,"false");
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG,"100");
         return properties;
     }
 }

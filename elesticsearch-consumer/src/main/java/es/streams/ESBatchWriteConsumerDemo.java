@@ -7,6 +7,8 @@ import es.common.RequestType;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -16,16 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
-public class ESIdempConsumerDemo {
+public class ESBatchWriteConsumerDemo {
 
     private static final String topicName = "tp_twitter_covid_19_01";
-    private static final Logger logger = LoggerFactory.getLogger(ESIdempConsumerDemo.class);
+    private static final Logger logger = LoggerFactory.getLogger(ESBatchWriteConsumerDemo.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Properties properties = PropertyFactory.getAppProperties("application-local.properties");
@@ -35,30 +35,31 @@ public class ESIdempConsumerDemo {
         KafkaConsumer<String, String> kafkaConsumer = createConsumer();
         while (true) {
             ConsumerRecords<String, String> consumerRecords = kafkaConsumer.poll(Duration.ofMillis(100));
-            for (ConsumerRecord<String, String> record : consumerRecords) {
+            logger.info("Received " + consumerRecords.count() + " records");
 
-                // For Idempotence, we need to pass id to elastic search
-                // 1.Kafka Generated ID
-                // String recordId = record.topic() + "_" + record.partition() + "_" + record.offset();
+            if (consumerRecords.count() > 0) {
+                BulkRequest bulkRequest = new BulkRequest();
+                for (ConsumerRecord<String, String> record : consumerRecords) {
 
-                // 2. ID from Twitter
-                String tweetId = extractIdFromTweet(record.value());
-                String jsonString = record.value();
-                IndexRequest indexRequest = new IndexRequest(
-                        properties.getProperty("es.index.name"),
-                        "_doc",
-                        tweetId
-                ).source(jsonString, XContentType.JSON);
+                    // For Idempotence, we need to pass id to elastic search
+                    // 1.Kafka Generated ID
+                    // String recordId = record.topic() + "_" + record.partition() + "_" + record.offset();
 
-                IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-                String id = indexResponse.getId();
-
-                logger.info("ID -> " + id);
-                logger.info("\nKey: " + record.key() + "\n"
-                        + "Value : " + record.value() + "\n" +
-                        "Partitions : " + record.partition() + "\n" +
-                        "Offset: " + record.offset() + " \n");
-                Thread.sleep(5000);
+                    // 2. ID from Twitter
+                    String tweetId = extractIdFromTweet(record.value());
+                    String jsonString = record.value();
+                    IndexRequest indexRequest = new IndexRequest(
+                            properties.getProperty("es.index.name"),
+                            "_doc",
+                            tweetId
+                    ).source(jsonString, XContentType.JSON);
+                    bulkRequest.add(indexRequest);
+                }
+                BulkResponse bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+                logger.info("Committing offset.....");
+                kafkaConsumer.commitSync();
+                logger.info("Offsets committed ....");
+                //Thread.sleep(1000);
             }
         }
         //client.close();
@@ -73,7 +74,7 @@ public class ESIdempConsumerDemo {
     }
 
     private static KafkaConsumer<String, String> createConsumer() {
-        Properties consumerProperties = PropertyFactory.getConsumerProps();
+        Properties consumerProperties = PropertyFactory.getManualCommitConsumerProps();
         // Created Consumer
         KafkaConsumer<String, String> kafkaConsumer = new KafkaConsumer<>(consumerProperties);
         kafkaConsumer.subscribe(Collections.singletonList(topicName));
