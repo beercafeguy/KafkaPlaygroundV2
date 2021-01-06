@@ -19,3 +19,11 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --
 
 
 kafka-topics.bat --bootstrap-server localhost:9092 --list
+
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --group ESConsumerManualGroupOne
+
+kafka-consumer-groups.bat --bootstrap-server localhost:9092 --group ESConsumerManualGroupOne --execute --reset-offsets --topic tp_twitter_covid_19_01 --to-earliest
+
+kafka-topics.bat --bootstrap-server localhost:9092 --topic twitter_status_connect --replication-factor 1 --partitions 3 --create
+kafka-topics.bat --bootstrap-server localhost:9092 --topic twitter_delete_connect --replication-factor 1 --partitions 3 --create 
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic twitter_status_connect

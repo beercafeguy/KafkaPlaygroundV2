@@ -19,6 +19,7 @@
         <module>TwitterKafkaESDemo</module>
         <module>elesticsearch-consumer</module>
         <module>kafka-connect-demo</module>
+        <module>kafka-streams-demo</module>
     </modules>
 
     <dependencies>
