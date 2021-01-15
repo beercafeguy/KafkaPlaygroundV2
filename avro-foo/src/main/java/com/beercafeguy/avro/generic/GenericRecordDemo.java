@@ -1,11 +1,10 @@
 package com.beercafeguy.avro.generic;
 
 import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.generic.GenericRecordBuilder;
+import org.apache.avro.generic.*;
+import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
 
 
@@ -28,6 +27,7 @@ public class GenericRecordDemo {
                 "    { \"name\": \"age\", \"type\": \"int\", \"doc\": \"Age of the customer\"},\n" +
                 "    { \"name\": \"height\", \"type\": \"float\", \"doc\": \"Height in CMs\"},\n" +
                 "    { \"name\": \"weight\", \"type\": \"float\", \"doc\": \"Weight in kgs\"},\n" +
+                "    { \"name\": \"city\", \"type\": \"string\",\"default\":\"No City\", \"doc\": \"City of residence\"},\n" +
                 "    { \"name\": \"automated_email\", \"type\": \"boolean\",\"default\": true, \"doc\": \"Do we need to send automated emails for promotion\"}\n" +
                 "  ]\n" +
                 "}");
@@ -36,7 +36,7 @@ public class GenericRecordDemo {
         GenericRecordBuilder genericRecordBuilder=new GenericRecordBuilder(schema);
         genericRecordBuilder.set("first_name","Hem");
         genericRecordBuilder.set("last_name","Chandra");
-        genericRecordBuilder.set("age","29");
+        genericRecordBuilder.set("age",29);
         genericRecordBuilder.set("height",5.8d);
         genericRecordBuilder.set("weight",65);
 
@@ -49,7 +49,7 @@ public class GenericRecordDemo {
         fullCustomerBuilder.set("first_name","Ankur");
         fullCustomerBuilder.set("middle_name","Bong");
         fullCustomerBuilder.set("last_name","Das");
-        fullCustomerBuilder.set("age","39");
+        fullCustomerBuilder.set("age",39);
         fullCustomerBuilder.set("height",5.9d);
         fullCustomerBuilder.set("weight",75);
         fullCustomerBuilder.set("automated_email",false);
@@ -71,10 +71,27 @@ public class GenericRecordDemo {
 
         try(DataFileWriter<GenericRecord> writer=new DataFileWriter<>(datumWriter)){
 
-            writer.create(customerRecord.getSchema(),new File("avrodata/default_customer.avro"));
+            writer.create(customerRecord.getSchema(),new File("default_customer.avro"));
             writer.append(customerRecord);
-            System.out.println("Written avrodata/default_customer.avro successfully");
+            System.out.println("Written default_customer.avro successfully");
             writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //reading a file
+
+        final File file=new File("default_customer.avro");
+        final DatumReader<GenericRecord> reader=new GenericDatumReader<>();
+        GenericRecord customerFromDisk;
+        try(DataFileReader<GenericRecord> dataFileReader=new DataFileReader<GenericRecord>(file,reader)){
+
+            customerFromDisk=dataFileReader.next();
+            System.out.println("Read from disk completed");
+            System.out.println(customerFromDisk.toString());
+            System.out.println("First Name :"+customerFromDisk.get("first_name"));
+            System.out.println("City: "+customerFromDisk.get("city"));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
