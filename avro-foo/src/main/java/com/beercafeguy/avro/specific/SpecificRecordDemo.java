@@ -54,6 +54,5 @@ public class SpecificRecordDemo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //
     }
 }
