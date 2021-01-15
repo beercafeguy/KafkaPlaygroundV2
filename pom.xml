@@ -20,6 +20,7 @@
         <module>elesticsearch-consumer</module>
         <module>kafka-connect-demo</module>
         <module>kafka-streams-demo</module>
+        <module>avro-foo</module>
     </modules>
 
     <dependencies>

@@ -14,6 +14,7 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --
 kafka-consumer-groups.bat --bootstrap-server localhost:9092 --describe --group SampleConsumerGroupOne
 
 kafka-topics.bat --bootstrap-server localhost:9092 --topic tp_twitter_covid_19_01 --replication-factor 1 --partitions 3 --create
+kafka-topics.bat --bootstrap-server localhost:9092 --topic tp_twitter_covid_max_reach --replication-factor 1 --partitions 3 --create
 
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic tp_twitter_covid_19_01
 
@@ -27,3 +28,5 @@ kafka-consumer-groups.bat --bootstrap-server localhost:9092 --group ESConsumerMa
 kafka-topics.bat --bootstrap-server localhost:9092 --topic twitter_status_connect --replication-factor 1 --partitions 3 --create
 kafka-topics.bat --bootstrap-server localhost:9092 --topic twitter_delete_connect --replication-factor 1 --partitions 3 --create 
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic twitter_status_connect
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic tp_twitter_covid_max_reach
