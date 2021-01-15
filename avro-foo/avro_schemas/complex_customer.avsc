@@ -1,0 +1,26 @@
+[{
+  "type": "record",
+  "namespace": "com.beercafeguy.avro",
+  "name": "Customer",
+  "doc": "Avro schema for simple customer",
+  "fields": [
+    { "name": "first_name", "type": "string", "doc": "First name of the customer"},
+    { "name": "middle_name", "type": ["null","string"],"default": null, "doc": "First name of the customer"},
+    { "name": "last_name", "type": "string","doc": "Last name of the customer"},
+    { "name": "age", "type": "int", "doc": "Age of the customer"},
+    { "name": "automated_email", "type": "boolean","default": true, "doc": "Do we need to send automated emails for promotion"},
+    { "name": "customer_emails","type": "array","items": "string","default": []},
+    { "name": "customer_address","type": "com.beercafeguy.avro.CustomerAddress"}
+  ]
+},{
+ "type": "record",
+  "namespace": "com.beercafeguy.avro",
+  "name": "CustomerAddress",
+  "fields": [
+    { "name": "address","type": "string"},
+    { "name": "city","type": "string"},
+    { "name": "post_cd","type": ["int","string"]},
+    { "name": "type","type": "enum","symbols": ["PO BOX","RESIDENTIAL","OFFICE"]}
+  ]
+}
+]
