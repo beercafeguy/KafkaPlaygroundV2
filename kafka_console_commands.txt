@@ -30,3 +30,12 @@ kafka-topics.bat --bootstrap-server localhost:9092 --topic twitter_delete_connec
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic twitter_status_connect
 
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --from-beginning --group console_consumer_twitter_covis19 --topic tp_twitter_covid_max_reach
+
+
+zookeeper-server-start.bat config/zookeeper.properties
+kafka-server-start.bat config/server.properties
+
+kafka-topics.bat --create --topic quickstart-events --bootstrap-server localhost:9092
+kafka-topics.bat --list --bootstrap-server localhost:9092
+kafka-console-producer.bat --topic quickstart-events --bootstrap-server localhost:9092
+kafka-console-consumer.bat --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
